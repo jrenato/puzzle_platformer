@@ -18,14 +18,11 @@ var camera_instance
 
 func _ready() -> void:
 	player_sprite.animation_finished.connect(_on_animated_sprite_2d_animation_finished)
-
-	camera_instance = player_camera.instantiate()
-	camera_instance.global_position.y = camera_height
-	get_tree().current_scene.add_child.call_deferred(camera_instance)
+	setup_up_camera()
 
 
 func _process(delta: float) -> void:
-	camera_instance.global_position.x = global_position.x
+	update_camera_position()
 
 
 func _physics_process(delta: float):
@@ -39,30 +36,31 @@ func _physics_process(delta: float):
 	velocity.x = horizontal_input * movement_speed
 	velocity.y += gravity
 
-	# Check player state
+	handle_movement_state()
+
+	move_and_slide()
+
+	face_movement_direction(horizontal_input)
+
+
+func setup_up_camera() -> void:
+	camera_instance = player_camera.instantiate()
+	camera_instance.global_position.y = camera_height
+	get_tree().current_scene.add_child.call_deferred(camera_instance)
+
+
+func update_camera_position() -> void:
+	camera_instance.global_position.x = global_position.x
+
+
+func handle_movement_state() -> void:
+	# Get movement state
 	var is_falling: bool = velocity.y > 0.0 and not is_on_floor()
 	var is_jumping: bool = Input.is_action_just_pressed("jump") and is_on_floor()
 	var is_double_jumping: bool = Input.is_action_just_pressed("jump") and is_falling
 	var is_jumping_cancelled: bool = Input.is_action_just_released("jump") and velocity.y < 0.0
-	var is_idle: bool = is_on_floor() and is_zero_approx(horizontal_input) 
-	var is_walking: bool = is_on_floor() and not is_zero_approx(horizontal_input)
-
-
-	if is_jumping:
-		jump_count += 1
-		velocity.y = -jump_strength
-	elif is_double_jumping:
-		jump_count += 1
-		if jump_count <= max_jumps:
-			velocity.y = -jump_strength
-	elif is_jumping_cancelled:
-		velocity.y = 0.0
-	elif is_on_floor():
-		jump_count = 0
-
-	# Apply movement
-	move_and_slide()
-
+	var is_idle: bool = is_on_floor() and is_zero_approx(velocity.x) 
+	var is_walking: bool = is_on_floor() and not is_zero_approx(velocity.x)
 
 	# Update player sprite animation
 	if is_jumping:
@@ -76,7 +74,21 @@ func _physics_process(delta: float):
 	elif is_idle:
 		player_sprite.play("idle")
 
+	# Adjust jump count and velocity
+	if is_jumping:
+		jump_count += 1
+		velocity.y = -jump_strength
+	elif is_double_jumping:
+		jump_count += 1
+		if jump_count <= max_jumps:
+			velocity.y = -jump_strength
+	elif is_jumping_cancelled:
+		velocity.y = 0.0
+	elif is_on_floor():
+		jump_count = 0
 
+
+func face_movement_direction(horizontal_input: float) -> void:
 	# Update player sprite flip
 	if not is_zero_approx(horizontal_input):
 		if horizontal_input < 0:
