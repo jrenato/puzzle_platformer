@@ -115,7 +115,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("12_01s75")
 }],
-"loop": false,
+"loop": true,
 "name": &"fall",
 "speed": 24.0
 }, {
@@ -197,7 +197,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("36_avfvp")
 }],
-"loop": false,
+"loop": true,
 "name": &"jump",
 "speed": 24.0
 }, {
@@ -305,6 +305,7 @@ animations = [{
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("player_sprite")]
 script = ExtResource("1_l22bb")
 player_sprite = NodePath("AnimatedSprite2D")
+max_jumps = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -28)
@@ -314,5 +315,5 @@ shape = SubResource("RectangleShape2D_8w8sj")
 position = Vector2(0, -30)
 scale = Vector2(0.1, 0.1)
 sprite_frames = SubResource("SpriteFrames_t6afo")
-animation = &"idle"
+animation = &"walk"
 autoplay = "idle"
