@@ -15,6 +15,10 @@ run/main_scene="res://Levels/level_01.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[debug]
+
+gdscript/warnings/unused_parameter=0
+
 [display]
 
 window/stretch/mode="canvas_items"
