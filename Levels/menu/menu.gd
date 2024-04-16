@@ -1,12 +1,14 @@
 extends Control
 
+@export var ip_line_edit: LineEdit
+@export var status_label: Label
 
-# Called when the node enters the scene tree for the first time.
+
 func _ready() -> void:
-	pass # Replace with function body.
+	multiplayer.connection_failed.connect(_on_connection_failed)
+	multiplayer.connected_to_server.connect(_on_connected_to_server)
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
 
@@ -16,8 +18,18 @@ func _on_host_button_pressed() -> void:
 
 
 func _on_join_button_pressed() -> void:
-	pass # Replace with function body.
+	Lobby.join_game(ip_line_edit.text)
+
+	status_label.text = "Connecting..."
 
 
 func _on_start_button_pressed() -> void:
-	pass # Replace with function body.
+	pass
+
+
+func _on_connection_failed() -> void:
+	status_label.text = "Connection failed"
+
+
+func _on_connected_to_server() -> void:
+	status_label.text = "Connected"
