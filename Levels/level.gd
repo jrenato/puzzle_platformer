@@ -22,6 +22,8 @@ func _ready() -> void:
 
 
 func _exit_tree() -> void:
+	if multiplayer.multiplayer_peer == null:
+		return
 	if not multiplayer.is_server():
 		return
 
