@@ -1,5 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://dlq43rsr25bf0"]
+[gd_scene load_steps=8 format=3 uid="uid://dlq43rsr25bf0"]
 
+[ext_resource type="Script" path="res://Levels/level.gd" id="1_qrbt2"]
 [ext_resource type="Texture2D" uid="uid://chwbcf7n2ajtp" path="res://Assets/platforms/Platformer_spritesheet.png" id="1_wylqf"]
 [ext_resource type="Texture2D" uid="uid://bujx43rcy5b85" path="res://Assets/backgrounds/background_02.png" id="2_3468n"]
 [ext_resource type="PackedScene" uid="uid://tibkwflls2d5" path="res://Player/player.tscn" id="2_a6kwr"]
@@ -67,7 +68,11 @@ physics_layer_0/collision_layer = 1
 physics_layer_0/collision_mask = 0
 sources/0 = SubResource("TileSetAtlasSource_d17ti")
 
-[node name="Level_01" type="Node2D"]
+[node name="Level_01" type="Node2D" node_paths=PackedStringArray("players_container", "spawn_points")]
+script = ExtResource("1_qrbt2")
+players_container = NodePath("Players/PlayersContainer")
+player_scene = ExtResource("2_a6kwr")
+spawn_points = [NodePath("Players/SpawnPoint_0"), NodePath("Players/SpawnPoint_1")]
 
 [node name="Environment" type="Node" parent="."]
 
@@ -97,6 +102,15 @@ layer_0/tile_data = PackedInt32Array(393216, 131072, 2, 393217, 131072, 2, 39321
 
 [node name="Players" type="Node" parent="."]
 
-[node name="Player" parent="Players" node_paths=PackedStringArray("player_sprite") instance=ExtResource("2_a6kwr")]
-position = Vector2(303, 384)
-player_sprite = NodePath("AnimatedSprite2D")
+[node name="PlayersContainer" type="Node2D" parent="Players"]
+
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="Players"]
+_spawnable_scenes = PackedStringArray("res://Player/player.tscn")
+spawn_path = NodePath("../PlayersContainer")
+spawn_limit = 2
+
+[node name="SpawnPoint_0" type="Node2D" parent="Players"]
+position = Vector2(79, 383)
+
+[node name="SpawnPoint_1" type="Node2D" parent="Players"]
+position = Vector2(279, 383)

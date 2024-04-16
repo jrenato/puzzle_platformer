@@ -1,4 +1,4 @@
-extends CharacterBody2D
+class_name Player extends CharacterBody2D
 
 @export var player_camera: PackedScene
 @export var camera_height = 126
